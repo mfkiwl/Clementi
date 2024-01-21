@@ -1,0 +1,75 @@
+digraph kernel {
+	rankdir=LR
+	ordering=out
+	splines=polyline
+	compound=true
+	overlap=false
+	layout=dot
+	newrank=true
+	subgraph cluster_0 {
+		node [style=filled]
+		label=SLR0
+		color=black
+		3097834250829034116 [label="<base>Module: streamRead_1\l| | <vertexPropStrm> Port: vertexPropStrm \l|  " fontsize="30pt" shape=record]
+		7829083898191089333 [label="<base>Module: streamMerge_1\l| | <input_a> Port: input_a \l| <output> Port: output \l| <input_b> Port: input_b \l|  " fontsize="30pt" shape=record]
+		-2437279397882668313 [label="<base>Module: streamApply_1\l| | <input_from_merge> Port: input_from_merge \l| <output_to_forward> Port: output_to_forward \l|  " fontsize="30pt" shape=record]
+		-8000839869677443644 [label="<base>Module: streamForward_1\l| | <input> Port: input \l| <output_a> Port: output_a \l| <output_b> Port: output_b \l|  " fontsize="30pt" shape=record]
+		-6647097532817362030 [label="<base>Module: streamWrite_1\l| | <vertexPropIn> Port: vertexPropIn \l|  " fontsize="30pt" shape=record]
+		3097834250829034116 -> 7829083898191089333 [label="d: 1" fontsize="30pt" headport=input_a overlap=false penwidth=5.0 tailport=vertexPropStrm]
+		7829083898191089333 -> -2437279397882668313 [label="d: 1" fontsize="30pt" headport=input_from_merge overlap=false penwidth=5.0 tailport=output]
+		-2437279397882668313 -> -8000839869677443644 [label="d: 1" fontsize="30pt" headport=input overlap=false penwidth=5.0 tailport=output_to_forward]
+		-8000839869677443644 -> -6647097532817362030 [label="d: 1" fontsize="30pt" headport=vertexPropIn overlap=false penwidth=5.0 tailport=output_a]
+	}
+	subgraph cluster_1 {
+		node [style=filled]
+		label=SLR1
+		color=black
+		-1799594105090684746 [label="<base>Module: streamMerge_2\l| | <output> Port: output \l| <input_a> Port: input_a \l| <input_b> Port: input_b \l|  " fontsize="30pt" shape=record]
+		4335659841184783548 [label="<base>Module: streamRead_2\l| | <vertexPropStrm> Port: vertexPropStrm \l|  " fontsize="30pt" shape=record]
+		3199426773785895940 [label="<base>Module: streamForward_2\l| | <input> Port: input \l| <output_a> Port: output_a \l| <output_b> Port: output_b \l|  " fontsize="30pt" shape=record]
+		-350444720056177432 [label="<base>Module: streamWrite_2\l| | <vertexPropIn> Port: vertexPropIn \l|  " fontsize="30pt" shape=record]
+		4335659841184783548 -> -1799594105090684746 [label="d: 1" fontsize="30pt" headport=input_a overlap=false penwidth=5.0 tailport=vertexPropStrm]
+		3199426773785895940 -> -350444720056177432 [label="d: 1" fontsize="30pt" headport=vertexPropIn overlap=false penwidth=5.0 tailport=output_a]
+	}
+	subgraph cluster_2 {
+		node [style=filled]
+		label=SLR2
+		color=black
+		4013659193075230565 [label="<base>Module: cmac_0\l| | <M_AXIS> Port: M_AXIS \l| <S_AXIS> Port: S_AXIS \l|  " fontsize="30pt" shape=record]
+		-1315258636523822959 [label="<base>Module: networklayer_0\l| | <S_AXIS_eth2nl> Port: S_AXIS_eth2nl \l| <M_AXIS_nl2eth> Port: M_AXIS_nl2eth \l| <M_AXIS_nl2sk> Port: M_AXIS_nl2sk \l| <S_AXIS_sk2nl> Port: S_AXIS_sk2nl \l|  " fontsize="30pt" shape=record]
+		4196840199341616442 [label="<base>Module: cmac_1\l| | <M_AXIS> Port: M_AXIS \l| <S_AXIS> Port: S_AXIS \l|  " fontsize="30pt" shape=record]
+		-2950951244385166292 [label="<base>Module: networklayer_1\l| | <S_AXIS_eth2nl> Port: S_AXIS_eth2nl \l| <M_AXIS_nl2eth> Port: M_AXIS_nl2eth \l| <M_AXIS_nl2sk> Port: M_AXIS_nl2sk \l| <S_AXIS_sk2nl> Port: S_AXIS_sk2nl \l|  " fontsize="30pt" shape=record]
+		503867970634503399 [label="<base>Module: streamMerge_3\l| | <output> Port: output \l| <input_a> Port: input_a \l| <input_b> Port: input_b \l|  " fontsize="30pt" shape=record]
+		640194016729686771 [label="<base>Module: streamRead_3\l| | <vertexPropStrm> Port: vertexPropStrm \l|  " fontsize="30pt" shape=record]
+		7025993056351690815 [label="<base>Module: streamForward_3\l| | <input> Port: input \l| <output_a> Port: output_a \l| <output_b> Port: output_b \l|  " fontsize="30pt" shape=record]
+		8219308078910533928 [label="<base>Module: streamWrite_3\l| | <vertexPropIn> Port: vertexPropIn \l|  " fontsize="30pt" shape=record]
+		4013659193075230565 -> -1315258636523822959 [label="d: 1" fontsize="30pt" headport=S_AXIS_eth2nl overlap=false penwidth=5.0 tailport=M_AXIS]
+		-1315258636523822959 -> 4013659193075230565 [label="d: 1" fontsize="30pt" headport=S_AXIS overlap=false penwidth=5.0 tailport=M_AXIS_nl2eth]
+		4196840199341616442 -> -2950951244385166292 [label="d: 1" fontsize="30pt" headport=S_AXIS_eth2nl overlap=false penwidth=5.0 tailport=M_AXIS]
+		-2950951244385166292 -> 4196840199341616442 [label="d: 1" fontsize="30pt" headport=S_AXIS overlap=false penwidth=5.0 tailport=M_AXIS_nl2eth]
+		640194016729686771 -> 503867970634503399 [label="d: 1" fontsize="30pt" headport=input_a overlap=false penwidth=5.0 tailport=vertexPropStrm]
+		-1315258636523822959 -> 503867970634503399 [label="d: 2048" fontsize="30pt" headport=input_b overlap=false penwidth=5.0 tailport=M_AXIS_nl2sk]
+		7025993056351690815 -> 8219308078910533928 [label="d: 1" fontsize="30pt" headport=vertexPropIn overlap=false penwidth=5.0 tailport=output_a]
+		7025993056351690815 -> -1315258636523822959 [label="d: 1" fontsize="30pt" headport=S_AXIS_sk2nl overlap=false penwidth=5.0 tailport=output_b]
+	}
+	subgraph cluster_3 {
+		node [style=filled]
+		label=SLR3
+		color=black
+		5778669591744784687 [label="<base>Module: streamForward_4\l| | <input> Port: input \l| <output_a> Port: output_a \l| <output_b> Port: output_b \l|  " fontsize="30pt" shape=record]
+		8951444409704169884 [label="<base>Module: streamWrite_4\l| | <vertexPropIn> Port: vertexPropIn \l|  " fontsize="30pt" shape=record]
+		6025183258777338753 [label="<base>Module: streamSync_1\l| | <input> Port: input \l| <output> Port: output \l|  " fontsize="30pt" shape=record]
+		4453302830471728352 [label="<base>Module: streamMerge_4\l| | <input_b> Port: input_b \l| <input_a> Port: input_a \l| <output> Port: output \l|  " fontsize="30pt" shape=record]
+		-4564128407621288823 [label="<base>Module: streamRead_4\l| | <vertexPropStrm> Port: vertexPropStrm \l|  " fontsize="30pt" shape=record]
+		5778669591744784687 -> 8951444409704169884 [label="d: 1" fontsize="30pt" headport=vertexPropIn overlap=false penwidth=5.0 tailport=output_a]
+		5778669591744784687 -> 6025183258777338753 [label="d: 1" fontsize="30pt" headport=input overlap=false penwidth=5.0 tailport=output_b]
+		6025183258777338753 -> 4453302830471728352 [label="d: 1" fontsize="30pt" headport=input_b overlap=false penwidth=5.0 tailport=output]
+		-4564128407621288823 -> 4453302830471728352 [label="d: 1" fontsize="30pt" headport=input_a overlap=false penwidth=5.0 tailport=vertexPropStrm]
+	}
+	-1799594105090684746 -> 7829083898191089333 [label="d: 1" fontsize="60pt" headport=input_b lhead=cluster_1 ltail=cluster_0 overlap=true penwidth=10.0 tailport=output]
+	503867970634503399 -> -1799594105090684746 [label="d: 1" fontsize="60pt" headport=input_b lhead=cluster_2 ltail=cluster_1 overlap=true penwidth=10.0 tailport=output]
+	-8000839869677443644 -> 3199426773785895940 [label="d: 1" fontsize="60pt" headport=input lhead=cluster_0 ltail=cluster_1 overlap=true penwidth=10.0 tailport=output_b]
+	3199426773785895940 -> 7025993056351690815 [label="d: 1" fontsize="60pt" headport=input lhead=cluster_1 ltail=cluster_2 overlap=true penwidth=10.0 tailport=output_b]
+	-2950951244385166292 -> 5778669591744784687 [label="d: 2048" fontsize="60pt" headport=input lhead=cluster_2 ltail=cluster_3 overlap=true penwidth=10.0 tailport=M_AXIS_nl2sk]
+	4453302830471728352 -> -2950951244385166292 [label="d: 1" fontsize="60pt" headport=S_AXIS_sk2nl lhead=cluster_3 ltail=cluster_2 overlap=true penwidth=10.0 tailport=output]
+}

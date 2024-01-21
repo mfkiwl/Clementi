@@ -1,0 +1,25 @@
+digraph kernel {
+	rankdir=LR
+	ordering=out
+	splines=polyline
+	compound=true
+	overlap=false
+	layout=dot
+	newrank=true
+	subgraph cluster_2 {
+		node [style=filled]
+		label=SLR2
+		color=black
+		510549064035516445 [label="<base>Module: cmac_0\l| | <M_AXIS> Port: M_AXIS \l| <S_AXIS> Port: S_AXIS \l|  " fontsize="30pt" shape=record]
+		766574696073592554 [label="<base>Module: networklayer_0\l| | <S_AXIS_eth2nl> Port: S_AXIS_eth2nl \l| <M_AXIS_nl2eth> Port: M_AXIS_nl2eth \l| <M_AXIS_nl2sk> Port: M_AXIS_nl2sk \l| <S_AXIS_sk2nl> Port: S_AXIS_sk2nl \l|  " fontsize="30pt" shape=record]
+		-1970154438340678256 [label="<base>Module: readProp_1\l| | <vertexTrans> Port: vertexTrans \l|  " fontsize="30pt" shape=record]
+		1832295251441530700 [label="<base>Module: globalTrans_1\l| | <vertexTrans> Port: vertexTrans \l| <vertexUpdate> Port: vertexUpdate \l| <net_in> Port: net_in \l| <net_out> Port: net_out \l|  " fontsize="30pt" shape=record]
+		4962192764286272376 [label="<base>Module: writeProp_1\l| | <vertexUpdate> Port: vertexUpdate \l|  " fontsize="30pt" shape=record]
+		510549064035516445 -> 766574696073592554 [label="d: 1" fontsize="30pt" headport=S_AXIS_eth2nl overlap=false penwidth=5.0 tailport=M_AXIS]
+		766574696073592554 -> 510549064035516445 [label="d: 1" fontsize="30pt" headport=S_AXIS overlap=false penwidth=5.0 tailport=M_AXIS_nl2eth]
+		-1970154438340678256 -> 1832295251441530700 [label="d: 1" fontsize="30pt" headport=vertexTrans overlap=false penwidth=5.0 tailport=vertexTrans]
+		1832295251441530700 -> 4962192764286272376 [label="d: 1" fontsize="30pt" headport=vertexUpdate overlap=false penwidth=5.0 tailport=vertexUpdate]
+		766574696073592554 -> 1832295251441530700 [label="d: 2048" fontsize="30pt" headport=net_in overlap=false penwidth=5.0 tailport=M_AXIS_nl2sk]
+		1832295251441530700 -> 766574696073592554 [label="d: 1" fontsize="30pt" headport=S_AXIS_sk2nl overlap=false penwidth=5.0 tailport=net_out]
+	}
+}
