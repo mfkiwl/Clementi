@@ -1,4 +1,4 @@
-# Clementi
+![](images/Clementi_logo.png)
 ### Clementi: A Scalable Multi-FPGA Graph Processing Framework
 
 ## Introduction
@@ -30,13 +30,21 @@ source /opt/Xilinx/Vitis/2021.2/settings64.sh
 source /opt/xilinx/xrt/setup.sh
 
 # Build all components for the netgp_parallel application
+# dependencies:
+sudo apt install libgraphviz-dev faketime
+pip3 install graphviz
+
+# to make fpga project:
+cd fpga
+# make with the default configuration (as in app makefile)
 make all app=netgp_parallel
+make TARGET=hw all app=netgp_parallel # make with specified target
 ```
 
 ## Build Software
 ```bash
 #If you only need to build software code, use the following command:
-make host app=netgp_parallel
+cd fpga && make host app=netgp_parallel
 ```
 
 ## Test
