@@ -17,7 +17,11 @@
 
 using namespace std;
 
-#define GRAPH_DATASET_DIRETORY "/data/yufeng/4node_4SLR_graph_dataset/"
+// ######### Should change this diretory in your environment #########
+#define GRAPH_DATASET_DIRETORY "/data/yufeng/single_4SLR_graph_dataset/"
+#define XCLBIN_DIRETORY "./build_dir_hw_single_gp_/kernel.link.xclbin"
+// ###################################################################
+
 #define USE_PERF true
 
 int getPartitionNum (std::string dataset_name, int sub_partition_num) {
@@ -53,12 +57,11 @@ int main(int argc, char** argv) {
     parser.parse(argc, argv);
     std::string g_name = parser.value("dataset");
 
-    std::string xclbin_file = "./build_dir_hw_single_gp_/kernel.link.xclbin";
+    std::string xclbin_file = XCLBIN_DIRETORY;
     xrt::device graphDevice = xrt::device(0); // every VM has only one FPGA, id = 0;
     xrt::uuid graphUuid = graphDevice.load_xclbin(xclbin_file);
     std::cout << "load xclbin done" << std::endl;
 
-    // acceleratorDataLoad(g_name, &graphDataInfo);
     std::string directory = std::string(GRAPH_DATASET_DIRETORY);
     int num_partition = getPartitionNum(directory + g_name, SUB_PARTITION_NUM);
 
@@ -75,7 +78,6 @@ int main(int argc, char** argv) {
     xrt::run wr_run = xrt::run(wr_kernel);
 
     int sub_par_per_node = SUB_PARTITION_NUM/PROCESSOR_NUM;
-    for (int ssp = 0; ssp < 10; ssp ++) {
     for (int p = 0; p < num_partition; p++) {
         for (int sp = 0; sp < sub_par_per_node; sp++) {
             // load edge array
@@ -123,8 +125,6 @@ int main(int argc, char** argv) {
                 out_array[i] = i;
             }
 
-            // std::cout << "[" << p << "][" << sp << "] map done " << std::endl;
-
             // sync data to device
 #if USE_PERF==true
             perf_count[0] = 0;
@@ -133,7 +133,6 @@ int main(int argc, char** argv) {
             edge_buf.sync(XCL_BO_SYNC_BO_TO_DEVICE);
             prop_buf.sync(XCL_BO_SYNC_BO_TO_DEVICE);
             out_buf.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-            // std::cout << "[" << p << "][" << sp << "] sync done " << std::endl;
             
             // set args 
             gs_run.set_arg(0, edge_buf);
@@ -174,11 +173,7 @@ int main(int argc, char** argv) {
                         " us, host test time = " << host_time << " us, overall exe time = " << host_overall << " us" << std::endl;
 #endif
 
-            // delete new array
-            // delete[] edge_array;
-            // delete[] out_array;
         }
-    }
     }
 
     MPI_Barrier(MPI_COMM_WORLD);

@@ -4,10 +4,15 @@
 ## Introduction
 Clementi is a scalable, multi-FPGA based graph processing framework designed to achieve near-linear scalability. By overlapping communication with computation, Clementi optimizes end-to-end performance. Additionally, leveraging a custom hardware architecture in FPGA, we propose a performance model and a workload scheduling method to minimize execution time discrepancies among FPGAs. Our experimental results demonstrate that Clementi significantly outperforms existing multi-FPGA frameworks, achieving speedups ranging from 1.86× to 8.75×, and exhibits near-linear scalability as the number of FPGAs increases.
 
+## Update Notice
+
+Please note that the documentation is actively being updated. If you encounter any inconsistencies or missing information, rest assured that it is part of our ongoing effort to provide comprehensive and up-to-date documentation. For any question, please contact this email: dcsyufeng@gmail.com.
+
 ## Prerequisites
 Clementi development utilizes the Xilinx Vitis toolset. Key components include:
 - **Xilinx XRT** version 2.14.354
 - **Vitis v++** at v2021.2 (64-bit)
+- **OpenMPI** at 4.1.4
 
 The framework is executed on the HACC cluster at NUS. For detailed information and access to this cluster, please refer to the [HACC_NUS website](https://xacchead.d2.comp.nus.edu.sg/). Each FPGA on this cluster is paired with a virtual CPU node, utilizing OpenMPI for distributed execution. The specific version used is Open MPI 4.1.4, and the system incorporates four [Xilinx U250 FPGAs](https://docs.amd.com/r/en-US/ug1120-alveo-platforms/U200-Gen3x16-XDMA-base_2-Platform).
 
@@ -19,6 +24,8 @@ Clementi utilizes a three-phase approach to process large graphs on multi-FPGA p
 3. **Concurrent Processing:** Each FPGA concurrently processes its assigned subgraphs, overlapping gather-scatter and global apply stages to optimize performance.
 
 ## Initialization
+In order to generate this design you will need a valid [UltraScale+ Integrated 100G Ethernet Subsystem](https://www.xilinx.com/products/intellectual-property/cmac_usplus.html) license set up in Vivado.
+
 To begin working with Clementi, clone the repository using the following command:
 ```bash
 git clone --recursive https://github.com/Xtra-Computing/Clementi.git
@@ -63,3 +70,10 @@ Run the hardware single graph processor script to test the system. Ensure that y
 - `src` - Hardware files for each block in the Clementi framework.
 - `test` - Contains test files and scripts.
 - `host_file` - Host files used in MPI code.
+
+
+## Licenses
+
+**Ethernet/cmac** License: [BSD 3-Clause License](THIRD_PARTY_LIC.md)
+
+**NetLayers/100G-fpga-network-stack-core** License: [BSD 3-Clause License](THIRD_PARTY_LIC.md)
