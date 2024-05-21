@@ -1,0 +1,4 @@
+[submodule "src/NetLayers/100G-fpga-network-stack-core"]
+	path = src/NetLayers/100G-fpga-network-stack-core
+	url = https://github.com/hpcn-uam/100G-fpga-network-stack-core.git
+	branch = vnx-vitis-hls

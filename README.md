@@ -36,22 +36,20 @@ git clone --recursive https://github.com/Xtra-Computing/Clementi.git
 source /opt/Xilinx/Vitis/2021.2/settings64.sh
 source /opt/xilinx/xrt/setup.sh
 
-# Build all components for the netgp_parallel application
+# Build all components for the Clementi application
 # dependencies:
 sudo apt install libgraphviz-dev faketime
 pip3 install graphviz
 
-# to make fpga project:
-cd fpga
 # make with the default configuration (as in app makefile)
-make all app=netgp_parallel
-make TARGET=hw all app=netgp_parallel # make with specified target
+make all app=clementi
+make TARGET=hw all app=clementi TYPE=pr # make with specified target
 ```
 
 ## Build Software
 ```bash
 #If you only need to build software code, use the following command:
-cd fpga && make host app=netgp_parallel
+make host app=clementi
 ```
 
 ## Test

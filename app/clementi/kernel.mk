@@ -1,6 +1,6 @@
 TARGET = hw
 DEVICE = xilinx_u250_gen3x16_xdma_3_1_202020_1
-FREQ = 255
+FREQ = 250
 ## need mpicxx to compile host code, if not use mpicxx, pls REMOVE the CXX_MPI def !!
 CXX_MPI = true
 CXXFLAGS += -DCXX_MPI=$(CXX_MPI)
@@ -10,7 +10,7 @@ BUILD_DIR := ./build_dir_$(TARGET)_$(APP)_$(TYPE)
 include host/pcg/Makefile
 include host/xcl2/Makefile
 include host/network/Makefile
-include host/netgp_parallel/Makefile
+include host/clementi/Makefile
 include host/log/Makefile
 include host/cmdparser/Makefile
 
@@ -21,8 +21,8 @@ include test/test_common/Makefile
 include src/data_struct/Makefile
 include src/gp_header/Makefile
 
-include src/netgp_parallel/Makefile
-include src/net_parallel/Makefile
+include src/clementi/Makefile
+# include src/net_parallel/Makefile
 
 ## add application : pr, wcc or bfs;
 ifeq ($(TYPE), bfs)
