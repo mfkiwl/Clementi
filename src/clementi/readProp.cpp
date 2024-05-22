@@ -1,6 +1,6 @@
 #include <hls_stream.h>
 #include <ap_int.h>
-#include "../gp_header/fpga_global_mem.h"
+#include "../header/fpga_global_mem.h"
 #include "../graph_fpga.h"
 
 extern "C" {

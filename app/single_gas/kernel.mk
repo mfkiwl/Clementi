@@ -1,6 +1,7 @@
 TARGET = hw
 DEVICE = xilinx_u250_gen3x16_xdma_3_1_202020_1
 FREQ = 250
+TYPE = pr
 BUILD_DIR := ./build_dir_$(TARGET)_$(APP)_$(TYPE)
 
 include host/pcg/Makefile
@@ -16,11 +17,19 @@ include test/test_duplicate_512/Makefile
 
 include src/gp/Makefile
 include src/apply/Makefile
-include src/pr/Makefile
 include src/sync/Makefile
 
 include test/test_common/Makefile
 include src/netgp_common/Makefile
+
+## add application : pr, wcc or bfs;
+ifeq ($(TYPE), bfs)
+	include src/bfs/Makefile
+else ifeq ($(TYPE), wcc)
+	include src/wcc/Makefile
+else 
+	include src/pr/Makefile
+endif
 
 LDFLAGS += -lxrt_coreutil -luuid
 VPP_FLAGS += -DLOG_CACHEUPDATEBURST=5

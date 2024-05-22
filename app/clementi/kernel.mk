@@ -19,10 +19,8 @@ include src/src_cache/Makefile
 include test/test_duplicate_512/Makefile
 include test/test_common/Makefile
 include src/data_struct/Makefile
-include src/gp_header/Makefile
-
+include src/header/Makefile
 include src/clementi/Makefile
-# include src/net_parallel/Makefile
 
 ## add application : pr, wcc or bfs;
 ifeq ($(TYPE), bfs)
@@ -69,13 +67,14 @@ CXXFLAGS += -DTEST_GP=1
 CXXFLAGS += -fopenmp
 
 
-## for wcc, HAVE_APPLY_OUTDEG=false, while pr = true
+## for wcc, HAVE_APPLY_OUTDEG=false
 HAVE_APPLY_OUTDEG=true
 
-SUB_PARTITION_NUM=4 ## each node have one apply kernel
-PROCESSOR_NUM=2
-KERNEL_NUM=4
-PARTITION_SIZE=1048576
+## note that the partition & subpartition in the code refer 'interval' & 'shard' in the paper. 
+SUB_PARTITION_NUM=4 ## 4 shards for 4 gather-scatter PEs in one U250 FPGA.
+PROCESSOR_NUM=2 ## use 2 FPGAs for test.
+KERNEL_NUM=4 ## gather-scatter PE number.
+PARTITION_SIZE=1048576 # desitination vertex range (1M) in interval-shard partition method.
 APPLY_REF_ARRAY_SIZE=1
 USE_APPLY=true
 CXXFLAGS += -DUSE_APPLY=$(USE_APPLY)

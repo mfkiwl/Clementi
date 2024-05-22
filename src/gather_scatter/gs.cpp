@@ -1,18 +1,18 @@
 #include <hls_stream.h>
 #include <string.h>
-#include "graph_fpga.h"
 
-#include "fpga_global_mem.h"
-#include "fpga_slice.h"
-#include "fpga_gather.h"
-#include "fpga_filter.h"
-#include "fpga_process_edge.h"
-#include "fpga_cache.h"
-#include "fpga_edge_prop.h"
+#include "../data_struct/gp_type.h"
+#include "../stream_operation.h"
+#include "../graph_fpga.h"
 
-#include "gp_type.h"
-#include "stream_operation.h"
-#include "fpga_application.h"
+#include "../header/fpga_global_mem.h"
+#include "../header/fpga_slice.h"
+#include "../header/fpga_gather.h"
+#include "../header/fpga_filter.h"
+#include "../header/fpga_process_edge.h"
+#include "../header/fpga_cache.h"
+#include "../header/fpga_edge_prop.h"
+#include "../header/fpga_application.h"
 
 void src_stream_out(    hls::stream<burst_token>        &src_stream,
                         source_vertex_stream_t          &src_axis)

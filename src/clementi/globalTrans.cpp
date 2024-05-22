@@ -1,6 +1,7 @@
+// note that the globalTrans is the Aggregate sub-module in the paper. 
 #include <hls_stream.h>
 #include "../graph_fpga.h"
-#include "../gp_header/fpga_global_mem.h"
+#include "../header/fpga_global_mem.h"
 
 extern "C" {
     void  globalTrans (

@@ -6,14 +6,14 @@
 #include "../stream_operation.h"
 #include "../graph_fpga.h"
 
-#include "../gp_header/fpga_global_mem.h"
-#include "../gp_header/fpga_slice.h"
-#include "../gp_header/fpga_gather.h"
-#include "../gp_header/fpga_filter.h"
-#include "../gp_header/fpga_process_edge.h"
-#include "../gp_header/fpga_cache.h"
-#include "../gp_header/fpga_edge_prop.h"
-#include "../gp_header/fpga_application.h"
+#include "../header/fpga_global_mem.h"
+#include "../header/fpga_slice.h"
+#include "../header/fpga_gather.h"
+#include "../header/fpga_filter.h"
+#include "../header/fpga_process_edge.h"
+#include "../header/fpga_cache.h"
+#include "../header/fpga_edge_prop.h"
+#include "../header/fpga_application.h"
 
 void src_stream_out(    hls::stream<burst_token>        &src_stream,
                         source_vertex_stream_t          &src_axis)

@@ -1,3 +1,4 @@
+# each FPGA have a global_apply kernel
 TARGET = hw
 DEVICE = xilinx_u250_gen3x16_xdma_3_1_202020_1
 FREQ = 250

@@ -1,7 +1,7 @@
 #include <hls_stream.h>
 #include "../graph_fpga.h"
-#include "../gp_header/fpga_global_mem.h"
-#include "../gp_header/fpga_apply.h"
+#include "../header/fpga_global_mem.h"
+#include "../header/fpga_apply.h"
 
 extern "C" {
     void  streamMerge(

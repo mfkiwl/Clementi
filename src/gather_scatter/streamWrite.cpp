@@ -1,5 +1,5 @@
 #include <hls_stream.h>
-#include "fpga_global_mem.h"
+#include "../header/fpga_global_mem.h"
 
 void perfCounterProc(hls::stream<int>& cmd_start, hls::stream<int>& cmd_end, int *out) {
     int cnt = 0;
