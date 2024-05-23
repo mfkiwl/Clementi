@@ -1,6 +1,6 @@
 #include <hls_stream.h>
 #include "../graph_fpga.h"
-#include "../gp/fpga_global_mem.h"
+#include "../header/fpga_global_mem.h"
 
 extern "C" {
     void  streamForward(

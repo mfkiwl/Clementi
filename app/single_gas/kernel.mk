@@ -7,20 +7,17 @@ BUILD_DIR := ./build_dir_$(TARGET)_$(APP)_$(TYPE)
 include host/pcg/Makefile
 include host/xcl2/Makefile
 include host/network/Makefile
-include host/thunder_gp/Makefile
+include host/single_gas/Makefile
 include host/log/Makefile
 include host/cmdparser/Makefile
 
 include src/coalesce/Makefile
 include src/src_cache/Makefile
 include test/test_duplicate_512/Makefile
-
-include src/gp/Makefile
-include src/apply/Makefile
-include src/sync/Makefile
-
 include test/test_common/Makefile
-include src/netgp_common/Makefile
+include src/data_struct/Makefile
+include src/header/Makefile
+include src/single_gas/Makefile
 
 ## add application : pr, wcc or bfs;
 ifeq ($(TYPE), bfs)

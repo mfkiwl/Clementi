@@ -1,8 +1,8 @@
 #include <hls_stream.h>
 #include "../graph_fpga.h"
-#include "../gp/fpga_global_mem.h"
-#include "../gp/fpga_apply.h"
-#include "../gp/fpga_application.h"
+#include "../header/fpga_global_mem.h"
+#include "../header/fpga_application.h"
+#include "../header/fpga_apply.h"
 
 extern "C" {
     void  streamApply(

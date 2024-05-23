@@ -1,3 +1,4 @@
+// Host code implementation for single FPGA based GAS graph processing.
 #include "../cmdparser/cmdlineparser.h"
 #include <stdio.h>
 #include <stdlib.h>
