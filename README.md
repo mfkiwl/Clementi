@@ -24,7 +24,7 @@ Clementi utilizes a three-phase approach to process large graphs on multi-FPGA p
 3. **Concurrent Processing:** Each FPGA concurrently processes its assigned subgraphs, overlapping gather-scatter and global apply stages to optimize performance.
 
 ## Initialization
-In order to generate this design you will need a valid [UltraScale+ Integrated 100G Ethernet Subsystem](https://www.xilinx.com/products/intellectual-property/cmac_usplus.html) license set up in Vivado.
+In order to generate this design you will need a valid [UltraScale+ Integrated 100G Ethernet Subsystem](https://www.xilinx.com/products/intellectual-property/cmac_usplus.html) license [installation](#Licence-Installation) in Vivado. 
 
 To begin working with Clementi, clone the repository using the following command:
 ```bash
@@ -85,3 +85,23 @@ Run the hardware single graph processor script to test the system. Ensure that y
 **Ethernet/cmac** License: [BSD 3-Clause License](THIRD_PARTY_LIC.md)
 
 **NetLayers/100G-fpga-network-stack-core** License: [BSD 3-Clause License](THIRD_PARTY_LIC.md)
+
+## License Installation
+
+Here is the simple solution for install cmac license using linux command:
+```bash
+## Step 1. Source the Vitis settings script:
+source /path/to/Vitis/settings64.sh
+## Step 2. Set the license file environment variable:
+export XILINXD_LICENSE_FILE=/path/to/your/license.lic
+## Step 3. To check the IP status in your project:
+## a. Start Vivado in TCL mode:
+vivado -mode tcl
+## b. Open your project:
+open_project /path/to/your/project.xpr
+## c. Generate a report for all IP statuses and save it to a file:
+report_ip_status -all > /path/to/ip_status_report.txt
+## d. Close the project and exit the Vivado TCL shell:
+close_project
+exit
+```
