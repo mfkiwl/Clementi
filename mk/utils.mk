@@ -69,9 +69,9 @@ $(error HOST_ARCH variable not set, please set correctly and rerun)
 endif
 
 #Checks for EDGE_COMMON_SW
-ifdef CXX_MPI
-CXX := /opt/openmpi/bin/mpicxx
-endif
+# ifdef CXX_MPI
+# CXX := /opt/openmpi/bin/mpicxx
+# endif
 
 ifneq ($(HOST_ARCH), x86)
 ifndef EDGE_COMMON_SW

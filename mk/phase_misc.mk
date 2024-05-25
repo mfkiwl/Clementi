@@ -1,5 +1,5 @@
 
-include ./utils.mk
+include mk/utils.mk
 XSA :=
 ifneq ($(DEVICE), )
 XSA := $(call device2xsa, $(DEVICE))
@@ -23,7 +23,8 @@ post_compile:
 	}
 
 connect_info: ${DEFAULT_CFG}
-	../script/connect_parser.py  ${DEFAULT_CFG}
+	$(info    DEFAULT_CFG is $(DEFAULT_CFG))
+	./script/connect_parser.py  ${DEFAULT_CFG}
 	cp -f ${DEFAULT_CFG}.json.pdf /data/connect_info/$(APP)_kernel.pdf | true
 
 emconfig:$(EMCONFIG_DIR)/emconfig.json

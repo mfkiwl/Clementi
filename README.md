@@ -42,21 +42,30 @@ sudo apt install libgraphviz-dev faketime
 pip3 install graphviz
 
 # make with the default configuration (as in app makefile)
-make all app=clementi
-make TARGET=hw all app=clementi TYPE=pr # make with specified target
+make TARGET=hw all APP=clementi TYPE=pr # make with specified target
+# or 
+make TARGET=hw all APP=gather_scatter TYPE=pr
+# or
+make TARGET=hw all APP=global_apply
 ```
 
 ## Build Software
 ```bash
 #If you only need to build software code, use the following command:
-make host app=clementi
+make host APP=clementi
+# or 
+make host APP=gather_scatter
+# or
+make host APP=global_apply
 ```
 
 ## Test
 Run the hardware single graph processor script to test the system. Ensure that you have the correct OpenMPI settings configured before running the multiple FPGAs demo:
 ```bash
-./hw_single_gp.sh
+## For test gather_scatter module:
+./script/run_gather_scatter.sh
 ```
+[Note] please pay attention to the graph dataset directory.
 
 ## Repository Structure
 
@@ -68,6 +77,7 @@ Run the hardware single graph processor script to test the system. Ensure that y
 - `src` - Hardware files for each block in the Clementi framework.
 - `test` - Contains test files and scripts.
 - `host_file` - Host files used in MPI code.
+- `script` - Bash scripts in compilation.
 
 
 ## Licenses

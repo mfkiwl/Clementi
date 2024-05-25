@@ -18,8 +18,8 @@
 using namespace std;
 
 // ######### Should change this diretory in your environment #########
-#define GRAPH_DATASET_DIRETORY "/data/yufeng/single_4SLR_graph_dataset/"
-#define XCLBIN_DIRETORY "./build_dir_hw_single_gp_/kernel.link.xclbin"
+#define GRAPH_DATASET_DIRETORY "/data/yufeng/single_4SLR_graph_dataset_bp2/"
+#define XCLBIN_DIRETORY "./build_dir_hw_gather_scatter_pr/kernel.link.xclbin"
 // ###################################################################
 
 #define USE_PERF true
@@ -44,6 +44,10 @@ int getPartitionNum (std::string dataset_name, int sub_partition_num) {
 }
 
 int main(int argc, char** argv) {
+
+    std::cout << "Please modify the GRAPH_DATASET_DIRETORY into your path ! " << std::endl;
+    std::cout << "Current GRAPH_DATASET_DIRETORY : " << GRAPH_DATASET_DIRETORY << std::endl;
+    std::cout << "Current XCLBIN_DIRETORY : " << XCLBIN_DIRETORY << std::endl;
 
     MPI_Init(NULL, NULL); // init for multi-node
     int world_rank;
@@ -96,7 +100,7 @@ int main(int argc, char** argv) {
             // std::cout << "[" << p << "][" << sp_idx << "] edge_num = " << edge_num << std::endl;
 
 #if USE_PERF==true
-            xrt::bo perf_buf = xrt::bo(graphDevice, 1 * sizeof(int) , wr_kernel.group_id(4));
+            xrt::bo perf_buf = xrt::bo(graphDevice, 1 * sizeof(int) , wr_kernel.group_id(5));
             int* perf_count;
             perf_count = perf_buf.map<int*>();
 #endif
@@ -141,12 +145,12 @@ int main(int argc, char** argv) {
             gs_run.set_arg(4, PARTITION_SIZE); // should be dest vertex number, but I align, need modify
             cr_run.set_arg(0, prop_buf);
             wr_run.set_arg(0, out_buf);
-            wr_run.set_arg(2, PARTITION_SIZE);
+            wr_run.set_arg(2, 0); // offset 
+            wr_run.set_arg(3, PARTITION_SIZE); // vertex number
 #if USE_PERF==true
-            wr_run.set_arg(4, perf_buf);
+            wr_run.set_arg(5, perf_buf);
 #endif
 
-            auto start_overall = chrono::steady_clock::now();
             MPI_Barrier(MPI_COMM_WORLD);
             auto start_kernel = chrono::steady_clock::now();
             // kernel run and wait
@@ -159,9 +163,7 @@ int main(int argc, char** argv) {
             wr_run.wait();
             auto end_kernel = chrono::steady_clock::now();
             MPI_Barrier(MPI_COMM_WORLD);
-            auto end_overall = chrono::steady_clock::now();
-            int host_time = chrono::duration_cast<chrono::microseconds>(end_kernel - start_kernel).count();
-            int host_overall = chrono::duration_cast<chrono::microseconds>(end_overall - start_overall).count();
+            int kernel_time = chrono::duration_cast<chrono::microseconds>(end_kernel - start_kernel).count();
 
             // result transfer
             out_buf.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
@@ -169,8 +171,8 @@ int main(int argc, char** argv) {
             perf_buf.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
             int perf_num = perf_count[0];
             int time_us = perf_num / 250; // kernel run at 250 Mhz
-            std::cout << "run on node_" << world_rank << ", [" << p << "][" << sp_idx << "] device time = " << time_us << \
-                        " us, host test time = " << host_time << " us, overall exe time = " << host_overall << " us" << std::endl;
+            std::cout << "run on node_" << world_rank << ", [" << p << "][" << sp_idx << "] kernel time = " << kernel_time << \
+                        " us " << std::endl;
 #endif
 
         }
