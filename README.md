@@ -64,6 +64,8 @@ Run the hardware single graph processor script to test the system. Ensure that y
 ```bash
 ## For test gather_scatter module:
 ./script/run_gather_scatter.sh
+## For test global_apply module:
+./script/run_global_apply.sh
 ```
 [Note] please pay attention to the graph dataset directory.
 

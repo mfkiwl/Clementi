@@ -21,7 +21,7 @@
 using namespace std;
 
 // 1 for using one node, 0 for using multi nodes concurrently
-#define ONE_PARALLEL 1
+#define ONE_PARALLEL 0
 
 std::map<int, std::map<std::string, std::string>> FPGA_config = \
    {{0 , {{"ip_addr" , "192.168.0.201"}, {"tx_port" , "60510"}, {"rx_port" , "5001"}, {"idx" , "201"}, {"MAC_addr" , "00:0a:35:02:9d:c8"}}}, \
@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    std::string xclbin_file = "./build_dir_hw_net_parallel/kernel.link.xclbin";
+    std::string xclbin_file = "./build_dir_hw_global_apply/kernel.link.xclbin";
     xrt::device graphDevice = xrt::device(0); // every VM has only one FPGA, id = 0;
     xrt::uuid graphUuid = graphDevice.load_xclbin(xclbin_file);
     std::cout << "load xclbin done" << std::endl;
