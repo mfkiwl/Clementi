@@ -13,18 +13,8 @@
 
 #define ENDFLAG                 0xffffffff
 
-#if PROCESSOR_NUM == 4
-    #define GRAPH_DATASET_DIRETORY  "/data/yufeng/4node_4SLR_graph_dataset/"
-#endif
-#if PROCESSOR_NUM == 3
-    #define GRAPH_DATASET_DIRETORY  "/data/yufeng/3node_4SLR_graph_dataset/"
-#endif
-#if PROCESSOR_NUM == 2
-    #define GRAPH_DATASET_DIRETORY  "/data/yufeng/2node_4SLR_graph_dataset/"
-#endif
-#if PROCESSOR_NUM == 1
-    #define GRAPH_DATASET_DIRETORY  "/data/yufeng/single_4SLR_graph_dataset_bp2/"
-#endif
+// Please change this directory into your path.
+#define GRAPH_DATASET_DIRETORY  "/data/yufeng/single_4SLR_graph_dataset_bp2/"
 
 void partitionTransfer(graphInfo *info, graphAccelerator *acc);
 void setAccKernelArgs(graphInfo *info, graphAccelerator * acc);

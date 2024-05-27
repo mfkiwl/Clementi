@@ -28,7 +28,8 @@ std::map<int, std::map<std::string, std::string>> FPGA_config = \
 int acceleratorInit(graphInfo *info, graphAccelerator *acc)
 {
     // load xclbin file
-    auto xclbin_file = "./build_dir_hw_thunder_gp_pr/kernel.link.xclbin";
+    auto xclbin_file = "./build_dir_hw_single_gas_pr/kernel.link.xclbin";
+    log_info("[INFO] Load xclbin file : %s", xclbin_file);
     acc->graphDevice = xrt::device(0); // every VM has only one FPGA, id = 0;
     acc->graphUuid = acc->graphDevice.load_xclbin(xclbin_file);
 
@@ -47,6 +48,8 @@ int acceleratorInit(graphInfo *info, graphAccelerator *acc)
 
     krnl_name = "streamApply:{streamApply_1}";
     acc->applyKernel = xrt::kernel(acc->graphDevice, acc->graphUuid, krnl_name.c_str());
+    krnl_name = "streamSync:{streamSync_1}";
+    acc->syncKernel = xrt::kernel(acc->graphDevice, acc->graphUuid, krnl_name.c_str());
 
 
     // init FPGA buffers
@@ -104,6 +107,11 @@ void setAccKernelArgs(graphInfo *info, graphAccelerator *acc)
     acc->applyRun.set_arg(3, acc->outDegBuffer);
     acc->applyRun.set_arg(4, acc->outRegBuffer);
 
+    acc->syncRun = xrt::run(acc->syncKernel);
+    acc->syncRun.set_arg(2, 1);
+    acc->syncRun.set_arg(3, 2048); // FIFO length, 2048
+    acc->syncRun.set_arg(4, PARTITION_SIZE); // vertex number
+
 #endif
 
 }
@@ -157,6 +165,7 @@ int acceleratorExecute (int super_step, graphInfo *info, graphAccelerator *acc) 
         acc->applyRun.set_arg(6, PARTITION_SIZE); // vertex number in each partition
         acc->applyRun.set_arg(7, 0);
         acc->applyRun.start();
+        acc->syncRun.start();
 
         for (int sp = 0; sp < (kernel_per_node); sp++) {
             acc->gsRun[sp].wait();
@@ -164,6 +173,7 @@ int acceleratorExecute (int super_step, graphInfo *info, graphAccelerator *acc) 
             acc->writeRun[sp].wait();
         }
         acc->applyRun.wait();
+        acc->syncRun.wait();
 
     }
 
@@ -185,7 +195,8 @@ int resultTransfer(graphInfo *info, graphAccelerator * acc, int run_counter)
         acc->propBuffer[sp].sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     }
 
-
+// for cmodel verification.
+/*
     std::ofstream outputFile("./run_verify/hw_data.bin", std::ios::binary);
     if (outputFile.is_open()) {
         if (run_counter % 2 == 0) {
@@ -197,6 +208,7 @@ int resultTransfer(graphInfo *info, graphAccelerator * acc, int run_counter)
         }
         outputFile.close();
     }
+*/
 
     return 0;
 }

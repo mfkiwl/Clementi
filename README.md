@@ -47,6 +47,8 @@ make TARGET=hw all APP=clementi TYPE=pr # make with specified target
 make TARGET=hw all APP=gather_scatter TYPE=pr
 # or
 make TARGET=hw all APP=global_apply
+# or
+make TARGET=hw all APP=single_gas TYPE=pr
 ```
 
 ## Build Software
@@ -66,6 +68,9 @@ Run the hardware single graph processor script to test the system. Ensure that y
 ./script/run_gather_scatter.sh
 ## For test global_apply module:
 ./script/run_global_apply.sh
+
+## For test single_gas, first login a U250 FPGA node, then:
+./single_gas.app -d R25 -s 10 ## dataset = R25, and superstep = 10.
 ```
 [Note] please pay attention to the graph dataset directory.
 
