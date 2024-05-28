@@ -38,22 +38,11 @@ int acceleratorInit(graphInfo *info, graphAccelerator *acc)
     std::string xclbin_file;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-    if (world_size < 0) {
+    if (world_size <= 1) {
         log_error("world size error! ");
         return 0;
-    } else if (world_size == 1) {
-        std::cout << "please use thunder gp kernel for single node test" << std::endl;
-#ifdef NOT_USE_GS
-        xclbin_file = "./build_dir_hw_thunder_gp_pure_apply_/kernel.link.xclbin";
-#else
-        xclbin_file = "./build_dir_hw_netgp_parallel_wcc/kernel.link.xclbin";
-#endif
     } else { // multi node
-#ifdef NOT_USE_GS
-        xclbin_file = "./build_dir_hw_net_parallel/kernel.link.xclbin";
-#else
-        xclbin_file = "./build_dir_hw_netgp_parallel_pr/kernel.link.xclbin";
-#endif
+        xclbin_file = "./build_dir_hw_clementi_pr/kernel.link.xclbin";
     }
 
     acc->graphDevice = xrt::device(0); // every VM has only one FPGA, id = 0;
@@ -341,8 +330,10 @@ int resultTransfer(graphInfo *info, graphAccelerator * acc, int run_counter)
         acc->propBufferNew[sp].sync(XCL_BO_SYNC_BO_FROM_DEVICE);
         acc->propBuffer[sp].sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     }
+
+    /*
     
-    std::ofstream outputFile("./run_verify/netgp_parallel_" + std::to_string(world_size) + "_node.bin", std::ios::binary);
+    std::ofstream outputFile("./run_verify/clementi_" + std::to_string(world_size) + "_node.bin", std::ios::binary);
     if (outputFile.is_open()) {
         if (run_counter % 2 == 0) {
             outputFile.write(reinterpret_cast<char*>(&(info->compressedVertexNum)), sizeof(int));
@@ -353,6 +344,8 @@ int resultTransfer(graphInfo *info, graphAccelerator * acc, int run_counter)
         }
         outputFile.close();
     }
+
+    */
 
     log_trace("[INFO] Sync data (temp, outReg) to host ");
 

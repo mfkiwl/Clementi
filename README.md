@@ -68,9 +68,11 @@ Run the hardware single graph processor script to test the system. Ensure that y
 ./script/run_gather_scatter.sh
 ## For test global_apply module:
 ./script/run_global_apply.sh
+## For test Clementi:
+./script/run_clementi.sh R25 30 ## dataset = R25, and superstep = 30.
 
 ## For test single_gas, first login a U250 FPGA node, then:
-./single_gas.app -d R25 -s 10 ## dataset = R25, and superstep = 10.
+./single_gas.app -d R25 -s 30 ## dataset = R25, and superstep = 30.
 ```
 [Note] please pay attention to the graph dataset directory.
 
@@ -111,4 +113,4 @@ report_ip_status -all > /path/to/ip_status_report.txt
 ## d. Close the project and exit the Vivado TCL shell:
 close_project
 exit
-```
+```ls

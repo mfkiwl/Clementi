@@ -64,7 +64,7 @@ int acceleratorSchedule(const std::string &gName, graphInfo *info)
         }
     }
     inputFile.close();
-    std::cout << "World rank " << world_rank << " ";
+    std::cout << "World rank " << world_rank << " : ";
     info->scheduleItem.clear();
     int p_size = intArrays[world_rank].size();
     for (int i = 0; i < p_size; ++i) {
