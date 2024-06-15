@@ -6,7 +6,7 @@ Clementi is a scalable, multi-FPGA based graph processing framework designed to 
 
 ## Update Notice
 
-Please note that the documentation is actively being updated. If you encounter any inconsistencies or missing information, rest assured that it is part of our ongoing effort to provide comprehensive and up-to-date documentation. For any question, please contact this email: dcsyufeng@gmail.com.
+Please note that the documentation is actively being updated. For any question, please contact this email: dcsyufeng@gmail.com.
 
 ## Prerequisites
 Clementi development utilizes the Xilinx Vitis toolset. Key components include:
@@ -112,5 +112,3 @@ open_project /path/to/your/project.xpr
 report_ip_status -all > /path/to/ip_status_report.txt
 ## d. Close the project and exit the Vivado TCL shell:
 close_project
-exit
-```ls
