@@ -5,30 +5,43 @@ import os
 import argparse
 from scipy.optimize import minimize
 
-def segmented_function(params, x):
-    a, b, c = params
+def performance_model(params, x):
+    a, b = params
     return np.minimum(1.4, a / (b * x + 0.488))
 
 def objective_function(params, x, y, e_op):
-    y_pred = segmented_function(params, x)
+    y_pred = performance_model(params, x)
     y_pred[y_pred < 0.1] = 0.1
     weighted_error = e_op * np.sqrt((y - y_pred) ** 2) / y / y_pred
     return np.mean(weighted_error)
 
+# used for constant alpha beta model, accuracy test
+# what if the estimated parameter is not accurate.
+def alpha_beta_test_model (alpha, beta):
+    return np.minimum(1.4, beta / (alpha * x + 0.488))
+
 parser = argparse.ArgumentParser(description="node number")
 parser.add_argument("dataset", type=str, help="dataset name")
 parser.add_argument("node_num", type=np.int32, help="node number")
+
+parser.add_argument("--TEST_ACCURACY", "-t", default = False, type=bool,  help="used for TEST_ACCURACY")
+parser.add_argument("--alpha", "-a", default = 1.0, type=np.float32, help="alpha parameter [1.0, 3.0]")
+parser.add_argument("--beta", "-b", default = 1.0, type=np.float32, help="beta parameter [0.6, 1.0]")
 args = parser.parse_args()
 
 NODE_NUM = args.node_num
 DATASET_NAME = args.dataset
-APPLY_TIME = 1.5
+APPLY_TIME = 2 ## consists of apply time and partition switching time
 SLR_PER_NODE = 4
 DUMMY_TASK = {'partition_id': str(0xffff), 'exe_time': 0.1} ## set the minimal time interval
 RANDOM_NUM = 100
 MAX_EXE_TIME = 0xffffffff
 PATH = "./m_access/"
-DRAW_PIC = True
+DRAW_PIC = False
+WRITE_SCHEDULE = False
+TEST_ACCURACY = args.TEST_ACCURACY
+para_alpha = args.alpha
+para_beta = args.beta
 
 class RangeSet:
     def __init__(self):
@@ -49,7 +62,7 @@ class RangeSet:
 def getPartitionNum (dataset):
     ref_path = "/data/yufeng/single_4SLR_graph_dataset_bp2/" + dataset
     for p_idx in range(100):
-        file_name = ref_path + "/p_" + str(p_idx) + "_sp_0.txt"
+        file_name = ref_path + "/p_" + str(p_idx) + "_sp_0.bin"
         if (os.path.exists(file_name) == False):
             return p_idx
 
@@ -71,61 +84,32 @@ x = v_e_ratio
 y = MTEPS_hw / 1000  # GTEPS
 e_op_t = edge_op / max(edge_op)
 
-initial_params = [0.9, 2, 1]
-bounds = [(0, 1), (0.5, 7.8125), (None, None)]  # Bounds for a, b, and c
+initial_params = [0.9, 2]
+bounds = [(0.6, 1), (0.5, 7.8125)]  # Bounds for alpha, beta
 
 result = minimize(objective_function, initial_params, args=(x, y, e_op_t), bounds=bounds, method='L-BFGS-B')
 
 if result.success:
-    MTEPS = segmented_function(result.x, x) * 1000
+    if TEST_ACCURACY == False:
+        MTEPS = performance_model(result.x, x) * 1000
+
+        abs_error_sum = np.sum(np.abs(edge_op/MTEPS - edge_op/MTEPS_hw))
+        error_percentage = (abs_error_sum / np.sum(edge_op/MTEPS_hw)) * 100
+        a, b = result.x
+        print(f"GTEPS = min(1.4, {a:.3f} / ({b:.3f} * (M_v/M_e) + 0.488)), subgraph error ratio = {error_percentage:.3f} %")
+
+    else:
+        MTEPS = alpha_beta_test_model(para_alpha, para_beta) * 1000
 else:
     print ("fitting failed, please change the bound range")
     exit(-1)
-
-""" For version 1.0
-var_op = np.loadtxt(PATH + DATASET_NAME + "_var.txt")
-theta1 = 1350
-theta2 = 100000
-## estimate execution time for each partition
-# V <= 0.192*E + 130686; MTEPS -> E
-# V > 0.192*E + 130686; MTEPS -> E & V/E
-"""
 
 original_tasks = []
 partitionNum = getPartitionNum(DATASET_NAME)
 
 for p_idx in range(partitionNum):
-
-    """ For version 1.0
-    if (v_e_ratio[p_idx] <= 0.8):
-    ## for small v/e
-        MTEPS = 7809 / (2.8505 * v_e_ratio[p_idx] + (2480 / edge_op[p_idx]) + 3.0395) - 1012
-        MTEPS = MTEPS * pow(theta1,2) / (pow((var_op[p_idx] + theta1), 2))
-        MTEPS = np.array(MTEPS, dtype=np.int32)
-        MTEPS[MTEPS > 1300] = 1300
-    ## for large v/e
-    else:
-        MTEPS = 1396 / (2.375 * v_e_ratio[p_idx] - (6.5011 / edge_op[p_idx]) + 0.788) - 12.057 
-        MTEPS = np.array(MTEPS, dtype=np.int32)
-        MTEPS[MTEPS < 10] = 10.0
-        MTEPS = MTEPS * pow(theta2,2) / (pow((var_op[p_idx] + theta2), 2))
-    """
     exe_time = np.int32((edge_op[p_idx] * 8 / MTEPS[p_idx] / SLR_PER_NODE // 1000  + 1)) ## constant overhead
     original_tasks.append({"partition_id" : str(p_idx), "exe_time" : exe_time})
-
-    """ Old method Version 0.0
-    # if (vertex_op[p_idx] <= (0.192 * edge_op[p_idx] + 130686)):
-    #     MTEPS = 1200 / ((4*1024*1024*0.0895 / edge_op[p_idx]) + 0.924)
-    #     # MTEPS = 1300 / ((4*1024*1024*0.0895 / edge_op[p_idx]) + 0.924) * pow(theta1,2) / (pow((var_op[p_idx] + theta1), 2))
-    # else:
-    #     MTEPS = 1200 / (2.375 * v_e_ratio[p_idx] + (4*1024*1024*0.0155 / edge_op[p_idx]) + 0.468)
-    #     MTEPS = 6.821 / (332.19 * v_e_ratio[p_idx] + (-1097724033 / edge_op[p_idx]) -4.047)
-        ## * pow(theta2,2) / (pow((var_op[p_idx] + theta2), 2))
-    # exe_time = np.int32((edge_op[p_idx] * 8 / MTEPS / SLR_PER_NODE // 1000  + 1)) ## constant overhead
-    # print ("partition = ", p_idx, " MTEPS = ", MTEPS, " exe_time = ", exe_time)
-    # original_tasks.append({"partition_id" : str(p_idx), "exe_time" : exe_time})
-    """
-
 
 ## need to add a partition task split (for long execution time) to divide;
 average_exe_time = 0
@@ -150,7 +134,7 @@ average_exe_time = (average_exe_time + NODE_NUM - 1) // NODE_NUM
 # threshold = [i * 0.2 for i in range(int(2 / 0.2) + 1)]
 threshold = [2]
 for alpha in threshold:
-    print ("parameter search .. threshold = ", alpha)
+    ## print ("parameter search .. threshold = ", alpha)
     thres_time = alpha * average_exe_time ## task exe time larger than thres_time, split;
     
     forward_tasks = [item for item in original_tasks if item["exe_time"] <= thres_time]
@@ -229,20 +213,26 @@ for alpha in threshold:
             MAX_EXE_TIME = current_time
 
 print ("Name ", DATASET_NAME, " scheduler, Node number = ", NODE_NUM, " max_time = ", MAX_EXE_TIME)
-for n_idx in range(NODE_NUM):
-    print ("Node ", n_idx, " exe_time = ", exe_time_per_worker_opt[n_idx], " task order : ", workstations_opt[n_idx])
+# for n_idx in range(NODE_NUM):
+    # print ("Node ", n_idx, " exe_time = ", exe_time_per_worker_opt[n_idx], " task order : ", workstations_opt[n_idx])
 workstations_opt = [[item for item in sublist if item != ['65535', 2]] for sublist in workstations_opt]
-print (workstations_opt)
+## print (workstations_opt)
 
 workstations_opt_filter = [[item for item in sublist if item[0] != '65535'] for sublist in workstations_opt]
-print (workstations_opt_filter)
+## print (workstations_opt_filter)
 
-output_file = "schedule.txt"
-with open(output_file, "w") as file:
-    for sublist in workstations_opt_filter:
-        file.write("PartitionList: ")
-        file.write(" ".join(entry[0] for entry in sublist))
-        file.write("\n")
+if TEST_ACCURACY == False:
+    output_file = "schedule.txt"
+else:
+    output_file = "./test_alpha_beta/schedule_" + DATASET_NAME + "_a_" + str(para_alpha) + "_b_" + str(para_beta) + ".txt"
+    print (output_file)
+
+if WRITE_SCHEDULE == True:
+    with open(output_file, "w") as file:
+        for sublist in workstations_opt_filter:
+            file.write("PartitionList: ")
+            file.write(" ".join(entry[0] for entry in sublist))
+            file.write("\n")
 # print("All partitions have been assigned.")
 
 ## draw the task execution timeline
@@ -301,4 +291,3 @@ if DRAW_PIC == True:
 
     # Save the figure to a PNG file
     plt.savefig("machine_task_timeline_" + DATASET_NAME + ".png", dpi=300)
-
